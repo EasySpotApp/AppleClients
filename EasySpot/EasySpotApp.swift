@@ -9,19 +9,11 @@ import SwiftUI
 
 @main
 struct EasySpotApp: App {
-    
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var body: some Scene {
 //        WindowGroup {
 //            ContentView()
 //        }
-        #if os(macOS)
-        MenuBarExtra {
-            AppMenu()
-        }
-        label: {
-            Image("TrayIconDisabled").renderingMode(.template)
-        }
-        .menuBarExtraStyle(.window)
-        #endif
     }
 }

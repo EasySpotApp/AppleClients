@@ -16,6 +16,7 @@ struct SubtleButton<Content: View>: View {
     var body: some View {
         Button(action: action) {
             content()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .buttonStyle(.borderless)
         .frame(width: 24, height: 24)

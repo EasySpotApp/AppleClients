@@ -13,33 +13,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button.image?.isTemplate = true
             button.action = #selector(showMenu(_:))
             button.target = self
-            
-//            let clickRecognizer = NSClickGestureRecognizer(target: self, action: #selector(handleClick(_:)))
-//            button.addGestureRecognizer(clickRecognizer)
         }
     }
-    
-//    @objc func handleClick(_ sender: NSClickGestureRecognizer) {
-//        guard let event = NSApp.currentEvent else { return }
-//        
-//        if event.type == .rightMouseUp {
-//            print("Right click detected")
-//        } else if event.modifierFlags.contains(.option) {
-//            print("Option key clicked")
-//        } else {
-//            print("Regular left click")
-//            showMenu(sender)
-//        }
-//    }
     
     @objc func showMenu(_ sender: AnyObject?) {
         guard let button = statusBarItem?.button else { return }
         
         let menu = NSMenu()
-        
-//        menu.addItem(swiftUItoNSItem(AppMenuHeader()))
-        
-//        menu.addItem(NSMenuItem.separator())
         
         menu.addItem(swiftUItoNSItem(AppMenuContent()))
 
@@ -61,7 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             x: 0,
             y: 0,
             width: 300,
-            height: targetSize.height
+            height: 300
         )
         menuItem.view = hostingView
 

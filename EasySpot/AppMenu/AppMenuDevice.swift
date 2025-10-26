@@ -46,6 +46,9 @@ struct AppMenuDevice: View {
             MenuOption(action: action) {
                 Item(deviceName: deviceName, expanded: $expanded)
             }
+            if expanded {
+                Text("Test")
+            }
         }
     }
 }

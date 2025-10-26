@@ -21,6 +21,12 @@ struct AppMenuDevice: View {
                 Text(deviceName)
                 
                 Spacer()
+                
+                SubtleButton(action: {}) {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.gray)
+                }
             }
         }
     }

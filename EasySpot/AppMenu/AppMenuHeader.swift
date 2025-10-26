@@ -23,12 +23,12 @@ struct AppMenuHeader: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: 300, alignment: .leading)
     }
 }
 
 #Preview {
-    AppMenu()
+    AppMenuHeader()
 }
 
 #endif

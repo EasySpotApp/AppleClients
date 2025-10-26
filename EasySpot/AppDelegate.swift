@@ -1,6 +1,7 @@
 #if os(macOS)
 import AppKit
 import SwiftUI
+
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBarItem: NSStatusItem?
     
@@ -12,21 +13,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button.image?.isTemplate = true
             button.action = #selector(showMenu(_:))
             button.target = self
+            
+//            let clickRecognizer = NSClickGestureRecognizer(target: self, action: #selector(handleClick(_:)))
+//            button.addGestureRecognizer(clickRecognizer)
         }
     }
+    
+//    @objc func handleClick(_ sender: NSClickGestureRecognizer) {
+//        guard let event = NSApp.currentEvent else { return }
+//        
+//        if event.type == .rightMouseUp {
+//            print("Right click detected")
+//        } else if event.modifierFlags.contains(.option) {
+//            print("Option key clicked")
+//        } else {
+//            print("Regular left click")
+//            showMenu(sender)
+//        }
+//    }
     
     @objc func showMenu(_ sender: AnyObject?) {
         guard let button = statusBarItem?.button else { return }
         
         let menu = NSMenu()
         
-        let menuItem = swiftUItoNSItem(AppMenu())
+//        menu.addItem(swiftUItoNSItem(AppMenuHeader()))
         
-        menu.addItem(menuItem)
+//        menu.addItem(NSMenuItem.separator())
         
+        menu.addItem(swiftUItoNSItem(AppMenuContent()))
+
         menu.addItem(NSMenuItem.separator())
+
         menu.addItem(NSMenuItem(title: "Settings...", action: #selector(NSApplication.terminate(_:)), keyEquivalent: ""))
-        
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+
         // TODO: Check if the offsets look good on notchless macs
         menu.popUp(positioning: nil, at: NSPoint(x: -2, y: button.bounds.height + 5), in: button)
     }

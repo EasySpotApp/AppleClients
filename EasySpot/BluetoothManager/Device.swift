@@ -14,7 +14,7 @@ struct Device: Identifiable, Equatable {
     let peripheral: CBPeripheral
     var status: DeviceStatus
     var characteristics: EasySpotCharacteristics
-//    var rssi: Int
+    var rssi: Int
     
     static func == (lhs: Device, rhs: Device) -> Bool {
         lhs.id == rhs.id
@@ -27,4 +27,5 @@ struct EasySpotCharacteristics {
 
 enum DeviceStatus {
     case visible
+    case paired
 }

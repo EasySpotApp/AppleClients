@@ -4,25 +4,21 @@ import SwiftUI
 
 class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, ObservableObject {
     @Published var status: ManagerStatus = .ready
-    @Published var devices: [Device] = []
     @Published var deviceErrors: [DeviceErrorInfo] = []
+    @Published var deviceStore = DeviceStore()
 
     private var centralManager: CBCentralManager!
-    private var discoveredPeripheral: CBPeripheral?
-    private var targetCharacteristic: CBCharacteristic?
-    private var pendingValue: UInt8?
 
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
 
-    func sendValue(_ value: UInt8) throws {
+    func sendValue(_ value: UInt8, _ device: CBUUID) throws {
         if case let .bluetoothUnavailable(reason) = status {
             throw ManagerError.unavailable(reason: reason)
         }
 
-        pendingValue = value
         status = .scanning
         centralManager.scanForPeripherals(withServices: [Constants.serviceUUID], options: nil)
     }
@@ -61,8 +57,8 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
 
 //            statusMessage = "Found device: \(peripheral.name ?? peripheral.identifier.uuidString)"
 
-            discoveredPeripheral = peripheral
-            discoveredPeripheral?.delegate = self
+//            discoveredPeripheral = peripheral
+//            discoveredPeripheral?.delegate = self
 
             // TODO: connect when user clicks
             centralManager.connect(peripheral, options: nil)
@@ -158,7 +154,8 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             name: peripheral.name,
             peripheral: peripheral,
             status: .visible,
-            characteristics: EasySpotCharacteristics()
+            characteristics: EasySpotCharacteristics(),
+            rssi: 0
         )
 
         for characteristic in characteristics {
@@ -166,6 +163,41 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
                 device.characteristics.status = characteristic
             }
             // TODO: Check queue
+        }
+    }
+    
+    func setEnabled(device: Device, _ enabled: Bool) {
+        guard let characteristic = device.characteristics.status else {
+            deviceErrors.append(DeviceErrorInfo(
+                device: device.id,
+                error: .missingCharacteristic(Constants.Characteristic.status)
+            ))
+            return
+        }
+        
+        self.writeRawValue(
+            peripheral: device.peripheral,
+            characteristic: characteristic,
+            enabled ? 1 : 0,
+        )
+    }
+    
+    func writeRawValue(
+        peripheral: CBPeripheral,
+        characteristic: CBCharacteristic,
+        _ value: UInt8
+    ) {
+        let data = Data([value])
+        
+        if characteristic.properties.contains(.write) {
+            peripheral.writeValue(data, for: characteristic, type: .withResponse)
+        } else if characteristic.properties.contains(.writeWithoutResponse) {
+            peripheral.writeValue(data, for: characteristic, type: .withoutResponse)
+        } else {
+            deviceErrors.append(DeviceErrorInfo(
+                device: peripheral.identifier,
+                error: .WriteNotSupported
+            ))
         }
     }
 

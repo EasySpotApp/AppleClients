@@ -14,5 +14,9 @@ struct Constants {
         static let status = CBUUID(string: "47436878-5308-40F9-9C29-82C2CB87F595")
     }
     
+    enum Characteristic {
+        case status
+    }
+    
     static let easySpotCharacteristics = [CharacteristicUUIDs.status]
 }

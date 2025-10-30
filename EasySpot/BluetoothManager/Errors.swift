@@ -19,6 +19,7 @@ enum DeviceError: Error {
     // MARK: - Characteristic discovery
     case characteristicsDiscoveryFailed(_ localizedDescription: String)
     case noCharacteristics
+    case missingCharacteristic(_ characteristic: Constants.Characteristic)
     // MARK: - Connection
     case connectionFailed(_ localizedDescription: String?)
     case disconnectedUnexpectedly(_ localizedDescription: String?)
